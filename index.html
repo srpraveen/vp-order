@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VP Raw Material Ordering</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4a69bd">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Box Orders">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fa-solid fa-box-open fa-3x"></i> VP<br> Raw Material Ordering</h1>
+        </header>
+
+        <!-- Landing Page -->
+        <div id="landing-page" class="page active">
+            <div class="landing-grid">
+                <div class="landing-item" data-page="reels-page">
+                    <i class="fa-solid fa-toilet-paper"></i>
+                    <h3>Reels</h3>
+                </div>
+                <div class="landing-item" data-page="history-page">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <h3>Order History</h3>
+                </div>
+                <div class="landing-item" data-page="pasting-page">
+                    <i class="fa-solid fa-flask"></i>
+                    <h3>Pasting Powder</h3>
+                </div>
+                <div class="landing-item" data-page="ink-page">
+                    <i class="fa-solid fa-fill-drip"></i>
+                    <h3>RS4 Ink</h3>
+                </div>
+                <div class="landing-item" data-page="screen-page">
+                    <i class="fa-solid fa-paintbrush"></i>
+                    <h3>Screen Printing</h3>
+                </div>
+                <div class="landing-item" data-page="strapping-page">
+                    <i class="fa-solid fa-tape"></i>
+                    <h3>Strapping Roll</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reels Page -->
+        <div id="reels-page" class="page">
+            <button class="back-button" onclick="showPage('landing-page')">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </button>
+
+            <h2>Reels Order</h2>
+
+            <!-- Paper Mill Selector -->
+            <div class="mill-selector card">
+                 <label for="paper-mill"><i class="fa-solid fa-industry"></i> Paper Mill:</label>
+                 <select id="paper-mill">
+                     <option value="">-- Select Mill --</option>
+                     <option value="Sri Andal Papers">Sri Andal Papers</option>
+                     <option value="Akshera Papers">Akshera Papers</option>
+                     <option value="Sivadharshini Paper Mills">Sivadharshini Paper Mills</option>
+					 <option value="Shri Vaikunth Paper & Boards">Shri Vaikunth Paper & Boards</option>
+					 <option value="Vaithieswara Papers & boards">Vaithieswara Papers & boards</option>
+					 <option value="Pariyur Amman">Pariyur Amman</option>
+                 </select>
+            </div>
+
+            <!-- Variation Selection Area -->
+            <div class="variation-selector-area card">
+                <h3><i class="fa-solid fa-tags"></i> Select Variation to Add</h3>
+                <div class="variation-selectors">
+                    <div class="selector-item">
+                        <label for="select-bf">BF:</label>
+                        <select id="select-bf">
+                            <option value="">-- BF --</option>
+                            <!-- BF options populated by JS -->
+                        </select>
+                    </div>
+                    <div class="selector-item">
+                        <label for="select-gsm">GSM:</label>
+                        <select id="select-gsm">
+                             <option value="">-- GSM --</option>
+                            <!-- GSM options populated by JS -->
+                        </select>
+                    </div>
+                    <div class="selector-item">
+                        <label for="select-shade">Shade:</label>
+                        <select id="select-shade">
+                             <option value="">-- Shade --</option>
+                             <!-- Shade options populated by JS -->
+                        </select>
+                    </div>
+                </div>
+                <button class="action-button primary add-variation-section-btn" onclick="addVariationSection()">
+                    <i class="fa-solid fa-plus"></i> Add This Variation Section
+                </button>
+            </div>
+
+            <!-- Container for Added Variation Sections -->
+            <div id="reels-variation-sections-container">
+                <!-- Sections populated by JS -->
+            </div>
+
+            <!-- Generate Order Button -->
+            <button id="generate-reels-order-btn" class="action-button primary generate-order-btn" onclick="generateOrder('Reels')">
+                <i class="fa-solid fa-file-invoice"></i> Generate Order Summary
+            </button>
+        </div>
+
+        <!-- Order History Page -->
+        <div id="history-page" class="page">
+             <button class="back-button" onclick="showPage('landing-page')">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </button>
+            <h2>Order History</h2>
+            <ul id="history-list">
+                 <p>Loading history...</p> <!-- Placeholder -->
+            </ul>
+        </div>
+
+        <!-- Placeholder pages for other items -->
+         <div id="pasting-page" class="page">
+             <button class="back-button" onclick="showPage('landing-page')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <h2>Pasting Powder Order</h2>
+            <p>Pasting powder ordering form coming soon...</p>
+         </div>
+         <div id="ink-page" class="page">
+             <button class="back-button" onclick="showPage('landing-page')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <h2>RS4 Ink Order</h2>
+             <p>RS4 Ink ordering form coming soon...</p>
+        </div>
+         <div id="screen-page" class="page">
+              <button class="back-button" onclick="showPage('landing-page')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <h2>Screen Printing Order</h2>
+             <p>Screen Printing ordering form coming soon...</p>
+        </div>
+         <div id="strapping-page" class="page">
+              <button class="back-button" onclick="showPage('landing-page')">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <h2>Strapping Roll Order</h2>
+             <p>Strapping Roll ordering form coming soon...</p>
+        </div>
+
+
+        <!-- Order Summary Modal (For initial order generation) -->
+        <div id="order-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">Order Summary</h2>
+                    <span class="close" onclick="closeModal('order-modal')">×</span>
+                </div>
+                <div class="modal-body">
+                    <div class="order-summary" id="order-summary-text"></div>
+                     <div class="modal-actions">
+                         <button id="share-button" class="modal-button primary" onclick="shareOrderSummary()">
+                            <i class="fa-solid fa-share-nodes"></i> Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <!-- History Details Modal -->
+        <div id="history-details-modal" class="modal">
+            <div class="modal-content history-details-modal-content">
+                 <div class="modal-header">
+                    <h2>Order Details & Acknowledge Receipt</h2>
+                    <span class="close" onclick="closeModal('history-details-modal')">×</span>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="history-order-id">
+                    <div class="history-meta-details card">
+                        <p><strong>Order Date:</strong> <span id="history-modal-date"></span></p>
+                        <p><strong>Mill:</strong> <span id="history-modal-mill"></span></p>
+                    </div>
+
+                    <h4 class="history-items-title">Items: Ordered vs Received</h4>
+                    <div id="history-item-details-list">
+                         <!-- Table generated by JS -->
+                    </div>
+
+                    <div class="receipt-details card">
+                        <label for="received-date">Date Received:</label>
+                        <input type="date" id="received-date">
+                    </div>
+
+                     <div class="modal-actions">
+                          <button class="modal-button success" onclick="acknowledgeOrder()">
+                            <i class="fa-solid fa-check-circle"></i> Acknowledge & Save
+                          </button>
+                          <button class="modal-button primary" onclick="shareHistoryReceiptSummary()"> <!-- Updated function call -->
+                            <i class="fa-solid fa-share-nodes"></i> Share Receipt Status
+                          </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- /container -->
+    <script src="script.js"></script>
+</body>
+</html>
