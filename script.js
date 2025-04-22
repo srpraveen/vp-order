@@ -102,8 +102,7 @@ function createUnitToggle(measurementData, measurementTextElement) {
 
 function addVariationSection() {
     const bf = selectBf.value, gsm = selectGsm.value, shade = selectShade.value;
-    if (!bf || !gsm || !shade) { alert('Please select BF, GSM, and Shade.'); /* Add validation highlight maybe */ return; }
-    // Removed explicit style clearing, handled by :invalid CSS if needed
+    if (!bf || !gsm || !shade) { alert('Please select BF, GSM, and Shade.'); return; }
 
     const variationId = `var_${bf}_${gsm}_${shade.replace(/\s+/g, '')}_${Date.now()}`;
     const section = document.createElement('div'); section.className = 'variation-section card';
@@ -123,7 +122,7 @@ function addVariationSection() {
     });
 
     section.appendChild(listContainer); reelsVariationSectionsContainer.appendChild(section);
-    selectBf.value = ''; selectGsm.value = ''; selectShade.value = ''; // Reset selectors
+    selectBf.value = ''; selectGsm.value = ''; selectShade.value = '';
 }
 
 function initializeReelsPage() { populateVariationSelectors(); reelsVariationSectionsContainer.innerHTML = ''; if (paperMillSelect) paperMillSelect.value = ''; }
@@ -132,31 +131,17 @@ function displayOrderHistory() {
     if (!historyListEl) return;
     const history = loadOrders();
     historyListEl.innerHTML = '';
-
     if (history.length === 0) { historyListEl.innerHTML = '<li class="card"><p>No past orders found.</p></li>'; return; }
-
     history.forEach(order => {
         const li = document.createElement('li'); li.dataset.orderId = order.id; li.setAttribute('role', 'button'); li.setAttribute('tabindex', '0');
         li.onclick = () => showHistoryDetails(order.id); li.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') showHistoryDetails(order.id); };
-
         const orderDate = new Date(order.timestamp); const dateStr = orderDate.toLocaleDateString('en-CA'); const timeStr = orderDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit'});
         const statusClass = order.acknowledged ? 'acknowledged' : 'pending'; const statusText = order.acknowledged ? 'Acknowledged' : 'Pending';
-
         let totalItems = 0; let itemLabel = 'items';
-        if (order.items && Array.isArray(order.items)) {
-            totalItems = order.items.reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0);
-            if (order.type === 'Reels') { itemLabel = totalItems === 1 ? 'reel' : 'reels'; }
-            else { itemLabel = totalItems === 1 ? 'unit' : 'units'; }
-        }
-
+        if (order.items && Array.isArray(order.items)) { totalItems = order.items.reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0); if (order.type === 'Reels') { itemLabel = totalItems === 1 ? 'reel' : 'reels'; } else { itemLabel = totalItems === 1 ? 'unit' : 'units'; } }
         li.innerHTML = `
-            <div class="history-item-header">
-                <span class="date">${dateStr} ${timeStr}</span>
-                <span class="status ${statusClass}">${statusText}</span>
-            </div>
-            <div class="history-item-details">
-                Type: <strong>${order.type}</strong> | Mill: <span class="mill">${order.mill || 'N/A'}</span> | Total: ${totalItems} ${itemLabel}
-            </div>
+            <div class="history-item-header"> <span class="date">${dateStr} ${timeStr}</span> <span class="status ${statusClass}">${statusText}</span> </div>
+            <div class="history-item-details"> Type: <strong>${order.type}</strong> | Mill: <span class="mill">${order.mill || 'N/A'}</span> | Total: ${totalItems} ${itemLabel} </div>
         `;
         historyListEl.appendChild(li);
     });
@@ -164,14 +149,27 @@ function displayOrderHistory() {
 
 // --- UPDATED showPage function ---
 function showPage(pageId) {
-        // Hide all pages
+    // --- Select the header element ---
+    const headerElement = document.querySelector('header'); // Select the main header
+
+    // Hide all pages
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
     const targetPage = document.getElementById(pageId);
 
-    // Check if target page exists
-    if (targetPage) {
+    // --- Check if target page and header element exist ---
+    if (targetPage && headerElement) {
         targetPage.classList.add('active');
+
+        // --- START: Show/Hide Header Logic ---
+        if (pageId === 'landing-page') {
+            // Show header on landing page
+            headerElement.style.display = ''; // Reset to default (usually block)
+        } else {
+            // Hide header on all other pages
+            headerElement.style.display = 'none';
+        }
+        // --- END: Show/Hide Header Logic ---
 
         // Initialize content based on page
         if (pageId === 'reels-page') {
@@ -185,16 +183,15 @@ function showPage(pageId) {
         window.scrollTo(0, 0);
 
     } else {
-        console.error(`Page ${pageId} not found.`);
+        console.error(`Page ${pageId} or header element not found.`);
         // Fallback to landing page
         const landingPage = document.getElementById('landing-page');
-        if (landingPage) {
-            landingPage.classList.add('active');
-        }
-        }
+        if (landingPage) landingPage.classList.add('active');
+        // Ensure header is visible on fallback to landing
+        if (headerElement) headerElement.style.display = '';
     }
+}
 // --- End of UPDATED showPage function ---
-
 
 function formatOrderSummary(orderData) { // For initial order share
     const orderDate = new Date(orderData.timestamp); const dateStr = orderDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }); const timeStr = orderDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit'});
@@ -242,7 +239,7 @@ function shareOrderSummary() {
 
 function showHistoryDetails(orderId) {
     const order = loadOrders().find(o => o.id === orderId); if (!order) { console.error("Order not found:", orderId); return; }
-    currentHistoryOrderData = order; // Store for sharing receipt status
+    currentHistoryOrderData = order;
     historyOrderIdInput.value = order.id; const orderDate = new Date(order.timestamp); historyModalDate.textContent = orderDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + orderDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit'}); historyModalMill.textContent = order.mill || 'N/A'; historyReceivedDateInput.value = order.receivedDate || ''; historyReceivedDateInput.max = getTodayDateString();
     historyItemDetailsList.innerHTML = '';
     if (order.items?.length > 0) {
@@ -261,61 +258,31 @@ function showHistoryDetails(orderId) {
     historyDetailsModal.style.display = 'block';
 }
 
-// --- Function to format history receipt summary ---
 function formatHistoryReceiptSummary(orderData) {
     if (!orderData) return "Error: Order data not available.";
-
-    const orderDate = new Date(orderData.timestamp);
-    const dateStr = orderDate.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
+    const orderDate = new Date(orderData.timestamp); const dateStr = orderDate.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
     const receivedDateStr = orderData.receivedDate ? new Date(orderData.receivedDate).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Pending Receipt';
-
-    let summary = `--- ORDER RECEIPT STATUS ---\n`;
-    summary += `Order Date: ${dateStr}\n`;
-    summary += `Mill: ${orderData.mill || 'N/A'}\n`;
-    summary += `Received Date: ${receivedDateStr}\n`;
-    summary += `==============================\n\n`;
-
+    let summary = `--- ORDER RECEIPT STATUS ---\n`; summary += `Order Date: ${dateStr}\n`; summary += `Mill: ${orderData.mill || 'N/A'}\n`; summary += `Received Date: ${receivedDateStr}\n`; summary += `==============================\n\n`;
     let discrepancies = false;
     if (orderData.items && orderData.items.length > 0) {
         orderData.items.forEach(item => {
-            const orderedQty = item.quantity || 0;
-            const receivedQty = item.receivedQuantity === undefined ? '?' : (item.receivedQuantity || 0); // Show '?' if not yet entered
-            const itemDesc = (orderData.type === 'Reels')
-                ? `${item.measurementTextWithUnit || item.measurement} (BF:${item.bf || 'N/A'}, GSM:${item.gsm || 'N/A'})`
-                : (item.name || 'Item');
-
-            summary += `${itemDesc}\n`;
-            summary += `  Ordered: ${orderedQty} | Received: ${receivedQty}`;
-            if (receivedQty !== '?' && orderedQty !== receivedQty) {
-                summary += ` <-- MISMATCH`;
-                discrepancies = true;
-            }
-            summary += `\n\n`;
+            const orderedQty = item.quantity || 0; const receivedQty = item.receivedQuantity === undefined ? '?' : (item.receivedQuantity || 0);
+            const itemDesc = (orderData.type === 'Reels') ? `${item.measurementTextWithUnit || item.measurement} (BF:${item.bf || 'N/A'}, GSM:${item.gsm || 'N/A'})` : (item.name || 'Item');
+            summary += `${itemDesc}\n`; summary += `  Ordered: ${orderedQty} | Received: ${receivedQty}`;
+            if (receivedQty !== '?' && orderedQty !== receivedQty) { summary += ` <-- MISMATCH`; discrepancies = true; } summary += `\n\n`;
         });
-    } else {
-        summary += "No items found in this order.\n";
-    }
-
+    } else { summary += "No items found.\n"; }
     summary += `==============================\n`;
-    if (discrepancies) {
-        summary += `Status: Received with discrepancies noted.\n`;
-    } else if (orderData.receivedDate) {
-        summary += `Status: Received, quantities match order.\n`;
-    } else {
-        summary += `Status: Pending receipt acknowledgment.\n`;
-    }
-
+    if (discrepancies) { summary += `Status: Received with discrepancies.\n`; } else if (orderData.receivedDate) { summary += `Status: Received, quantities match.\n`; } else { summary += `Status: Pending receipt.\n`; }
     return summary;
 }
 
-// Share Receipt Status (Called from History Modal)
 function shareHistoryReceiptSummary() {
     if (!currentHistoryOrderData) { alert("Order details not loaded."); return; }
-    const summaryToShare = formatHistoryReceiptSummary(currentHistoryOrderData); // Use the correct formatter
+    const summaryToShare = formatHistoryReceiptSummary(currentHistoryOrderData);
     const shareData = { title: `Receipt Status - Order ${currentHistoryOrderData.id.substring(6, 12)}`, text: summaryToShare };
-     if (navigator.share && navigator.canShare(shareData)) {
-          navigator.share(shareData).then(() => console.log('Receipt status shared')).catch((e) => { console.error('Share error:', e); if (e.name !== 'AbortError') alert('Share failed.'); });
-     } else { alert('Web Share not supported.'); }
+     if (navigator.share && navigator.canShare(shareData)) { navigator.share(shareData).then(() => console.log('Receipt shared')).catch((e) => { console.error('Share error:', e); if (e.name !== 'AbortError') alert('Share failed.'); }); }
+     else { alert('Web Share not supported.'); }
 }
 
 function acknowledgeOrder() {
@@ -335,34 +302,24 @@ function closeModal(modalId) { const modal = document.getElementById(modalId); i
 // --- EVENT LISTENERS ---
 document.getElementById('landing-page')?.addEventListener('click', function(event) {
     const item = event.target.closest('.landing-item');
-    // Use optional chaining for safety
     const pageId = item?.dataset?.page;
-    if (pageId) {
-         console.log(`Attempting to show page: ${pageId}`);
-         showPage(pageId);
-    } else if (item) {
-         console.log('Clicked landing item has no data-page attribute.');
-         alert('This feature is coming soon!');
-    } else {
-        // Click was inside #landing-page but not on a .landing-item or its child
-         // console.log('Click inside landing page, but not on a clickable item.'); // Less noisy console
-    }
+    if (pageId) { console.log(`Navigating to: ${pageId}`); showPage(pageId); }
+    else if (item) { console.log('Landing item clicked, no page defined.'); alert('Feature coming soon!'); }
 });
 document.addEventListener('click', function(event) {
-    // Use optional chaining for closing modals
     if (event.target.classList.contains('close')) {
-        event.target.closest('.modal')?.closeModal(event.target.closest('.modal').id);
+        // Find the closest parent modal and close it
+        const modalToClose = event.target.closest('.modal');
+        if (modalToClose) {
+             closeModal(modalToClose.id);
+        }
     }
 });
-window.addEventListener('click', function(event) {
-    if (event.target.classList.contains('modal')) {
-        closeModal(event.target.id);
-    }
-});
+window.addEventListener('click', function(event) { if (event.target.classList.contains('modal')) closeModal(event.target.id); });
 
 // --- INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded.'); showPage('landing-page');
+    console.log('DOM loaded.'); showPage('landing-page'); // Show landing page initially
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./service-worker.js').then(reg => console.log('SW registered:', reg.scope)).catch(err => console.error('SW registration failed:', err)); }
     else { console.warn('Service Worker not supported.'); }
 });
