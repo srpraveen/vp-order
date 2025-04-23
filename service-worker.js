@@ -1,5 +1,5 @@
 // service-worker.js
-const CACHE_NAME = 'box-order-cache-v1';
+const CACHE_NAME = 'box-order-cache-v3';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -79,4 +79,30 @@ self.addEventListener('fetch', event => {
         });
       })
   );
+});
+// *** ADDED Message Listener ***
+self.addEventListener('message', (event) => {
+    console.log("[SW] Message received:", event.data);
+    if (event.data && event.data.action === 'checkForUpdate') {
+        console.log("[SW] Checking for updates...");
+        // Attempt to update the cache
+        event.waitUntil(
+            caches.open(CACHE_NAME)
+            .then(cache => {
+                // Re-fetch and cache all essential assets
+                // addAll fetches AND caches. If any fetch fails, it rejects.
+                return cache.addAll(urlsToCache);
+            })
+            .then(() => {
+                console.log("[SW] Cache updated successfully.");
+                // Send success message back to the client
+                event.source.postMessage({ status: 'updateCheckComplete', success: true });
+            })
+            .catch(error => {
+                console.error("[SW] Cache update failed:", error);
+                // Send failure message back to the client
+                event.source.postMessage({ status: 'updateCheckComplete', success: false, error: error.message });
+            })
+        );
+    }
 });
