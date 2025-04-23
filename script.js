@@ -144,10 +144,10 @@ function showPage(pageId) {
 }
 
 function formatOrderSummary(orderData) { // For initial share
-    const d = new Date(orderData.timestamp); const dS = d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }); const tS = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit'}); let s = `--- ${orderData.type.toUpperCase()} ORDER --- (${dS} ${tS})\n`; s += `Mill: ${orderData.mill || 'N/A'}\n`; s += `==============================\n\n`;
-    if (orderData.type === 'Reels' && orderData.items?.length) { const g = orderData.items.reduce((a, i) => { const k = `BF:${i.bf || 'N/A'} | GSM:${i.gsm || 'N/A'} | Shade:${i.shade || 'N/A'}`; if (!a[k]) a[k] = []; a[k].push({ m: i.measurementTextWithUnit, q: i.quantity }); return a; }, {}); for (const k in g) { s += `--- ${k} ---\n`; g[k].forEach(i => { s += `${i.m}: ${i.q} ${i.q === 1 ? 'reel' : 'reels'}\n`; }); s += `\n`; } }
+    const d = new Date(orderData.timestamp); const dS = d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }); const tS = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit'}); let s = `--- ${orderData.type.toUpperCase()} ORDER --- \n (${dS} ${tS})\n`; s += `Mill: ${orderData.mill || 'N/A'}\n`; s += `==========================\n\n`;
+    if (orderData.type === 'Reels' && orderData.items?.length) { const g = orderData.items.reduce((a, i) => { const k = `BF:${i.bf || 'N/A'} | GSM:${i.gsm || 'N/A'} | Shade:${i.shade || 'N/A'}`; if (!a[k]) a[k] = []; a[k].push({ m: i.measurementTextWithUnit, q: i.quantity }); return a; }, {}); for (const k in g) { s += `*_${k}_*\n`; g[k].forEach(i => { s += `${i.m}: ${i.q} ${i.q === 1 ? 'reel' : 'reels'}\n`; }); s += `\n`; } }
     else if (orderData.items) { orderData.items.forEach(i => { s += `${i.name || 'Item'}: ${i.quantity || 0} ${i.quantity === 1 ? 'unit' : 'units'}\n`; }); }
-    s += `==============================`; return s;
+    s += `==========================`; return s;
 }
 
 function generateOrder(orderType) {
@@ -174,10 +174,10 @@ function showHistoryDetails(orderId) {
 }
 
 function formatHistoryReceiptSummary(orderData) {
-    if (!orderData) return "Error: No order data."; const d = new Date(orderData.timestamp); const dS = d.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }); const rDS = orderData.receivedDate ? new Date(orderData.receivedDate).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Pending'; let s = `--- ORDER RECEIPT STATUS ---\nOrder Date: ${dS}\nMill: ${orderData.mill || 'N/A'}\nReceived: ${rDS}\n==============================\n\n`; let diff = false;
+    if (!orderData) return "Error: No order data."; const d = new Date(orderData.timestamp); const dS = d.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }); const rDS = orderData.receivedDate ? new Date(orderData.receivedDate).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Pending'; let s = `--- ORDER RECEIPT STATUS ---\nOrder Date: ${dS}\nMill: ${orderData.mill || 'N/A'}\nReceived: ${rDS}\n==========================\n\n`; let diff = false;
     if (orderData.items?.length) { orderData.items.forEach(i => { const oQ = i.quantity || 0; const rQ = i.receivedQuantity === undefined ? '?' : (i.receivedQuantity || 0); const iD = (orderData.type === 'Reels') ? `${i.measurementTextWithUnit || i.measurement} (BF:${i.bf || 'N/A'}, GSM:${i.gsm || 'N/A'})` : (i.name || 'Item'); s += `${iD}\n  Ordered: ${oQ} | Received: ${rQ}`; if (rQ !== '?' && oQ != rQ) { s += ` <-- MISMATCH`; diff = true; } s += `\n\n`; }); }
     else { s += "No items.\n"; }
-    s += `==============================\nStatus: `; if (diff) s += `Received w/ discrepancies.`; else if (orderData.receivedDate) s += `Received, quantities match.`; else s += `Pending receipt.`; return s;
+    s += `==========================\nStatus: `; if (diff) s += `Received w/ discrepancies.`; else if (orderData.receivedDate) s += `Received, quantities match.`; else s += `Pending receipt.`; return s;
 }
 
 function shareHistoryReceiptSummary() { if (!currentHistoryOrderData) { alert("Order details not loaded."); return; } const txt = formatHistoryReceiptSummary(currentHistoryOrderData); const d = { title: `Receipt Status - Order ${currentHistoryOrderData.id.substring(6, 12)}`, text: txt }; if (navigator.share && navigator.canShare(d)) navigator.share(d).catch(e => { if (e.name !== 'AbortError') alert('Share failed.'); }); else alert('Web Share not supported.'); }
