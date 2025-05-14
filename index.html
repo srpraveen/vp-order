@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#4a69bd">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Box Orders">
+    <meta name="apple-mobile-web-app-title" content="VP Orders">
 </head>
 <body>
     <div class="container">
@@ -47,26 +47,21 @@
                 </div>
             </div>
 
-            <!-- *** MOVED UPDATE BUTTON INSIDE LANDING PAGE DIV *** -->
             <div class="update-section">
                 <button id="check-update-btn" class="action-button secondary">
                     <i class="fa-solid fa-arrows-rotate"></i> Check for Updates
                 </button>
-                <p id="update-status-msg" class="update-status"></p> <!-- For showing messages -->
+                <p id="update-status-msg" class="update-status"></p>
             </div>
-            <!-- ************************************************** -->
-
-        </div> <!-- End of landing-page -->
+        </div>
 
         <!-- Reels Page -->
         <div id="reels-page" class="page">
+            <input type="hidden" id="editing-order-id" value="">
             <button class="back-button" onclick="showPage('landing-page')">
                 <i class="fa-solid fa-arrow-left"></i> Back
             </button>
-
-            <h2>Reels Order</h2>
-
-            <!-- Paper Mill Selector -->
+            <h2 id="reels-page-title">Reels Order</h2>
             <div class="mill-selector card">
                  <label for="paper-mill"><i class="fa-solid fa-industry"></i> Paper Mill:</label>
                  <select id="paper-mill">
@@ -79,102 +74,51 @@
 					 <option value="Pariyur Amman">Pariyur Amman</option>
                  </select>
             </div>
-
-            <!-- Variation Selection Area -->
             <div class="variation-selector-area card">
                 <h3><i class="fa-solid fa-tags"></i> Select Variation to Add</h3>
                 <div class="variation-selectors">
-                    <div class="selector-item">
-                        <label for="select-bf">BF:</label>
-                        <select id="select-bf">
-                            <option value="">-- BF --</option>
-                            <!-- BF options populated by JS -->
-                        </select>
-                    </div>
-                    <div class="selector-item">
-                        <label for="select-gsm">GSM:</label>
-                        <select id="select-gsm">
-                             <option value="">-- GSM --</option>
-                            <!-- GSM options populated by JS -->
-                        </select>
-                    </div>
-                    <div class="selector-item">
-                        <label for="select-shade">Shade:</label>
-                        <select id="select-shade">
-                             <option value="">-- Shade --</option>
-                             <!-- Shade options populated by JS -->
-                        </select>
-                    </div>
+                    <div class="selector-item"><label for="select-bf">BF:</label><select id="select-bf"><option value="">-- BF --</option></select></div>
+                    <div class="selector-item"><label for="select-gsm">GSM:</label><select id="select-gsm"><option value="">-- GSM --</option></select></div>
+                    <div class="selector-item"><label for="select-shade">Shade:</label><select id="select-shade"><option value="">-- Shade --</option></select></div>
                 </div>
                 <button class="action-button primary add-variation-section-btn" onclick="addVariationSection()">
                     <i class="fa-solid fa-plus"></i> Add This Variation Section
                 </button>
             </div>
-
-            <!-- Container for Added Variation Sections -->
-            <div id="reels-variation-sections-container">
-                <!-- Sections populated by JS -->
-            </div>
-
-            <!-- Generate Order Button -->
-            <button id="generate-reels-order-btn" class="action-button primary generate-order-btn" onclick="generateOrder('Reels')">
-                <i class="fa-solid fa-file-invoice"></i> Generate Order Summary
+            <div id="reels-variation-sections-container"></div>
+            <button id="generate-reels-order-btn" class="action-button primary generate-order-btn"> <!-- onclick removed -->
+                <i class="fa-solid fa-file-invoice"></i> Generate / Update Order Summary
             </button>
         </div>
 
         <!-- Order History Page -->
         <div id="history-page" class="page">
-             <button class="back-button" onclick="showPage('landing-page')">
-                <i class="fa-solid fa-arrow-left"></i> Back
-            </button>
+             <button class="back-button" onclick="showPage('landing-page')"> <i class="fa-solid fa-arrow-left"></i> Back </button>
             <h2>Order History</h2>
-            <ul id="history-list">
-                 <p>Loading history...</p> <!-- Placeholder -->
-            </ul>
+            <ul id="history-list"> <p>Loading history...</p> </ul>
         </div>
 
-        <!-- Placeholder pages for other items -->
-         <div id="pasting-page" class="page">
-             <button class="back-button" onclick="showPage('landing-page')">
-                <i class="fas fa-arrow-left"></i> Back
-            </button>
-            <h2>Pasting Powder Order</h2>
-            <p>Pasting powder ordering form coming soon...</p>
-         </div>
-         <div id="ink-page" class="page">
-             <button class="back-button" onclick="showPage('landing-page')">
-                <i class="fas fa-arrow-left"></i> Back
-            </button>
-            <h2>RS4 Ink Order</h2>
-             <p>RS4 Ink ordering form coming soon...</p>
-        </div>
-         <div id="screen-page" class="page">
-              <button class="back-button" onclick="showPage('landing-page')">
-                <i class="fas fa-arrow-left"></i> Back
-            </button>
-            <h2>Screen Printing Order</h2>
-             <p>Screen Printing ordering form coming soon...</p>
-        </div>
-         <div id="strapping-page" class="page">
-              <button class="back-button" onclick="showPage('landing-page')">
-                <i class="fas fa-arrow-left"></i> Back
-            </button>
-            <h2>Strapping Roll Order</h2>
-             <p>Strapping Roll ordering form coming soon...</p>
-        </div>
+        <!-- Placeholder pages -->
+        <div id="pasting-page" class="page"> <button class="back-button" onclick="showPage('landing-page')"><i class="fas fa-arrow-left"></i> Back</button> <h2>Pasting Powder</h2> <p>Coming soon...</p> </div>
+        <div id="ink-page" class="page"> <button class="back-button" onclick="showPage('landing-page')"><i class="fas fa-arrow-left"></i> Back</button> <h2>RS4 Ink</h2> <p>Coming soon...</p> </div>
+        <div id="screen-page" class="page"> <button class="back-button" onclick="showPage('landing-page')"><i class="fas fa-arrow-left"></i> Back</button> <h2>Screen Printing</h2> <p>Coming soon...</p> </div>
+        <div id="strapping-page" class="page"> <button class="back-button" onclick="showPage('landing-page')"><i class="fas fa-arrow-left"></i> Back</button> <h2>Strapping Roll</h2> <p>Coming soon...</p> </div>
 
-
-        <!-- Order Summary Modal (For initial order generation) -->
-        <div id="order-modal" class="modal">
+        <!-- Order Summary Modal -->
+        <div id="order-modal" class="modal"> <!-- Ensure this ID is used consistently -->
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 id="modal-title">Order Summary</h2>
-                    <span class="close" onclick="closeModal('order-modal')">×</span>
+                    <span class="close" data-modal-id="order-modal">×</span> <!-- Added data-modal-id -->
                 </div>
                 <div class="modal-body">
                     <div class="order-summary" id="order-summary-text"></div>
-                     <div class="modal-actions">
-                         <button id="share-button" class="modal-button primary" onclick="shareOrderSummary()">
+                    <div class="modal-actions">
+                        <!-- Edit Order Button Removed -->
+                        <button id="confirm-save-order-btn" class="modal-button success" onclick="confirmAndSaveOrder()">
+                            <i class="fa-solid fa-save"></i> Confirm & Save
+                        </button>
+                        <button id="share-button" class="modal-button primary" onclick="shareOrderSummary()">
                             <i class="fa-solid fa-share-nodes"></i> Share
                         </button>
                     </div>
@@ -182,43 +126,24 @@
             </div>
         </div>
 
-         <!-- History Details Modal -->
-        <div id="history-details-modal" class="modal">
+        <!-- History Details Modal -->
+        <div id="history-details-modal" class="modal"> <!-- Ensure this ID is used consistently -->
             <div class="modal-content history-details-modal-content">
-                 <div class="modal-header">
-                    <h2>Order Details & Acknowledge Receipt</h2>
-                    <span class="close" onclick="closeModal('history-details-modal')">×</span>
-                </div>
+                 <div class="modal-header"><h2>Order Details & Receipt</h2><span class="close" data-modal-id="history-details-modal">×</span></div> <!-- Added data-modal-id -->
                 <div class="modal-body">
                     <input type="hidden" id="history-order-id">
-                    <div class="history-meta-details card">
-                        <p><strong>Order Date:</strong> <span id="history-modal-date"></span></p>
-                        <p><strong>Mill:</strong> <span id="history-modal-mill"></span></p>
-                    </div>
-
+                    <div class="history-meta-details card"><p><strong>Order Date:</strong> <span id="history-modal-date"></span></p><p><strong>Mill:</strong> <span id="history-modal-mill"></span></p></div>
                     <h4 class="history-items-title">Items: Ordered vs Received</h4>
-                    <div id="history-item-details-list">
-                         <!-- Table generated by JS -->
-                    </div>
-
-                    <div class="receipt-details card">
-                        <label for="received-date">Date Received:</label>
-                        <input type="date" id="received-date">
-                    </div>
-
-                     <div class="modal-actions">
-                          <button class="modal-button success" onclick="acknowledgeOrder()">
-                            <i class="fa-solid fa-check-circle"></i> Acknowledge & Save
-                          </button>
-                          <button class="modal-button primary" onclick="shareHistoryReceiptSummary()"> <!-- Updated function call -->
-                            <i class="fa-solid fa-share-nodes"></i> Share Receipt Status
-                          </button>
+                    <div id="history-item-details-list"></div>
+                    <div class="receipt-details card"><label for="received-date">Date Received:</label><input type="date" id="received-date"></div>
+                    <div class="modal-actions">
+                          <button class="modal-button success" onclick="acknowledgeOrder()"><i class="fa-solid fa-check-circle"></i> Acknowledge</button>
+                          <button class="modal-button primary" onclick="shareHistoryReceiptSummary()"><i class="fa-solid fa-share-nodes"></i> Share Status</button>
                     </div>
                 </div>
             </div>
         </div>
-
-    </div> <!-- /container -->
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
