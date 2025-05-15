@@ -2,18 +2,36 @@
 
 // --- DATA ---
 const measurements = [
-    { id: 'r27.5', inches: '27.5"', cm: '70' }, { id: 'r28.5', inches: '28.5"', cm: '72' },
-    { id: 'r30', inches: '30"', cm: '76' },   { id: 'r31', inches: '31"', cm: '79' },
-    { id: 'r32', inches: '32"', cm: '82' },   { id: 'r33', inches: '33"', cm: '84' },
-    { id: 'r34', inches: '34"', cm: '86.5' }, { id: 'r36', inches: '36"', cm: '91.5' },
-    { id: 'r38', inches: '38"', cm: '96.5' }, { id: 'r40', inches: '40"', cm: '101.5' },
-    { id: 'r41', inches: '41"', cm: '104' },  { id: 'r41.5', inches: '41.5"', cm: '105.5' },
-    { id: 'r42.5', inches: '42.5"', cm: '108' }, { id: 'r43.5', inches: '43.5"', cm: '110.5' },
-    { id: 'r45', inches: '45"', cm: '114.5' }, { id: 'r46', inches: '46"', cm: '117' },
-    { id: 'r48', inches: '48"', cm: '122' },  { id: 'r49', inches: '49"', cm: '124.5' },
-    { id: 'r50', inches: '50"', cm: '127' },  { id: 'r52', inches: '52"', cm: '132' }
+    { id: 'r27.5', inches: '27.5"', cm: '70' },
+    { id: 'r28', inches: '28"', cm: '71' },        // <<< NEW
+    { id: 'r28.5', inches: '28.5"', cm: '72' },
+    { id: 'r30', inches: '30"', cm: '76' },
+    { id: 'r31', inches: '31"', cm: '79' },
+    { id: 'r32', inches: '32"', cm: '82' },
+    { id: 'r33', inches: '33"', cm: '84' },
+    { id: 'r34', inches: '34"', cm: '86.5' },
+    { id: 'r35', inches: '35"', cm: '89' },        // <<< NEW
+    { id: 'r36', inches: '36"', cm: '91.5' },
+    { id: 'r37', inches: '37"', cm: '94' },        // <<< NEW
+    { id: 'r38', inches: '38"', cm: '96.5' },
+    { id: 'r39', inches: '39"', cm: '99' },        // <<< NEW
+    { id: 'r40', inches: '40"', cm: '101.5' },
+    { id: 'r41', inches: '41"', cm: '104' },
+    { id: 'r41.5', inches: '41.5"', cm: '105.5' },
+    { id: 'r42', inches: '42"', cm: '106.5' },     // <<< NEW
+    { id: 'r42.5', inches: '42.5"', cm: '108' },
+    { id: 'r43', inches: '43"', cm: '109' },       // <<< NEW
+    { id: 'r43.5', inches: '43.5"', cm: '110.5' },
+    { id: 'r44', inches: '44"', cm: '111.5' },     // <<< NEW
+    { id: 'r45', inches: '45"', cm: '114.5' },
+    { id: 'r46', inches: '46"', cm: '117' },
+    { id: 'r47', inches: '47"', cm: '119.5' },     // <<< NEW
+    { id: 'r48', inches: '48"', cm: '122' },
+    { id: 'r49', inches: '49"', cm: '124.5' },
+    { id: 'r50', inches: '50"', cm: '127' },
+    { id: 'r52', inches: '52"', cm: '132' }
 ];
-const reelOptions = { bf: [12, 14, 16, 18, 20, 22, 24, 26, 28], gsm: [100, 140, 150, 180, 200, 220], shade: ['Natural Shade', 'GYT'] };
+const reelOptions = { bf: [12, 14, 16, 18, 20, 22, 24, 26, 28], gsm: [100, 120, 140, 150, 180, 200, 220], shade: ['Natural Shade', 'GYT'] };
 const MAX_REEL_QUANTITY = 50;
 
 // --- DOM Elements Cache (Declare here, assign in DOMContentLoaded) ---
